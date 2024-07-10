@@ -1,0 +1,37 @@
+<div class="dashboard">
+    <section class="stats">
+        @for (stat of stats; track stat) {
+        <div class="stat-card">
+            <h3>{{ stat.label }}</h3>
+            <p>{{ stat.value }}</p>
+        </div>
+        }
+    </section>
+
+    <section class="recent-orders">
+        <h2>Recent Orders</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Client</th>
+                    <th>Date</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                @for (order of recentOrders; track order) {
+                <div class="stat-card">
+                    <tr>
+                        <td>{{ order.id }}</td>
+                        <td>{{ order.client }}</td>
+                        <td>{{ order.date }}</td>
+                        <td>{{ order.status }}</td>
+                    </tr>
+                </div>
+                }
+
+            </tbody>
+        </table>
+    </section>
+</div>

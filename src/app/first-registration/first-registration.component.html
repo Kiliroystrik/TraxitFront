@@ -1,0 +1,16 @@
+<h1>S'inscrire</h1>
+<form [formGroup]="firstRegistrationform">
+    <div class="form-group">
+        <label for="companyName">Company Name</label>
+        <input type="text" class="form-control" id="companyName" formControlName="name">
+    </div>
+    <div class="form-group">
+        <label for="companyEmail">Company Email</label>
+        <input type="text" class="form-control" id="companyEmail" formControlName="email">
+    </div>
+    <div class="form-group">
+        <label for="companyPhone">Mot de passe</label>
+        <input type="password" class="form-control" id="userPassword" formControlName="password">
+    </div>
+    <button type="submit" (click)="submit()">Submit</button>
+</form>

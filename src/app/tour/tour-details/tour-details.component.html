@@ -1,0 +1,61 @@
+@if (tour) {
+<div>
+    <h2>Détails de la tournée</h2>
+
+    <div class="tour-info">
+        <p><strong>ID:</strong> {{ tour.id }}</p>
+        <p><strong>Date de création:</strong> {{ tour.createdAt | date:'short' }}</p>
+        <p><strong>Dernière mise à jour:</strong> {{ tour.updatedAt | date:'short' }}</p>
+        <p><strong>Date de début:</strong> {{ tour.startDate | date:'short' }}</p>
+        <p><strong>Date de fin:</strong> {{ tour.endDate | date:'short' }}</p>
+        <p><strong>Entreprise:</strong> {{ tour.company }}</p>
+    </div>
+
+    @if(tour.tourSteps && tour.tourSteps.length > 0){
+
+    }
+    <div class="tour-steps">
+        <h3>Étapes de la tournée</h3>
+        <ul>
+            @for (stepId of tour.tourSteps; track $index) {
+            <li>
+                {{ stepId }}
+                <!-- Vous pouvez ajouter plus de détails sur chaque étape si vous les récupérez -->
+            </li>
+            }
+        </ul>
+    </div>
+
+    @if (tour.driverAssignments && tour.driverAssignments && tour.driverAssignments.length > 0) {
+    <div class="driver-assignments">
+        <h3>Assignations de conducteurs</h3>
+        <ul>
+            @for (assignmentId of tour.driverAssignments; track $index) {
+            <li>
+                {{ assignmentId }}
+                <!-- Vous pouvez ajouter plus de détails sur chaque assignation si vous les sélectionnez -->
+            </li>
+            }
+        </ul>
+    </div>
+    }
+
+    @if (tour.vehicleAssignment && tour.vehicleAssignment.length > 0){
+    <div class="vehicle-assignments">
+        <h3>Assignations de véhicules</h3>
+        <ul>
+            @for (assignmentId of tour.vehicleAssignment; track $index) {
+            <li>
+                {{ assignmentId }}
+                <!-- Vous pouvez ajouter plus de détails sur chaque assignation si vous les récupérez -->
+            </li>
+            }
+        </ul>
+    </div>
+    }
+</div>
+}@else {
+<div>
+    <p>Chargement des détails de la tournée...</p>
+</div>
+}
