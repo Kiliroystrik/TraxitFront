@@ -1,5 +1,6 @@
 export interface OrderStep {
   "@id"?: string;
+  id?: number;
   type?: string;
   description?: string;
   quantity?: string;

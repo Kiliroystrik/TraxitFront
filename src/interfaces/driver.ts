@@ -1,5 +1,6 @@
 export interface Driver {
   "@id"?: string;
+  id?: number;
   licenceNumber?: string;
   licenceExpiration?: Date;
   tourTypes?: string[];

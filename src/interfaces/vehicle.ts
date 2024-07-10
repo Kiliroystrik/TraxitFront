@@ -1,5 +1,6 @@
 export interface Vehicle {
   "@id"?: string;
+  id?: number;
   registrationNumber?: string;
   mileage?: string;
   registeredAt?: Date;

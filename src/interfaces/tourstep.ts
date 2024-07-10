@@ -1,5 +1,6 @@
 export interface TourStep {
   "@id"?: string;
+  id?: number;
   actualDate?: Date;
   createdAt?: Date;
   updatedAt?: Date;

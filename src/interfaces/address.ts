@@ -1,5 +1,6 @@
 export interface Address {
   "@id"?: string;
+  id?: number;
   street?: string;
   city?: string;
   zipCode?: string;
