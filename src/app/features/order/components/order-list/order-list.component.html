@@ -1,0 +1,4 @@
+<button (click)="addOrder()">Créer une nouvelle commande</button>
+<app-crud-list [items]="orders" [displayFields]="displayFields" (view)="onView($event)" (edit)="onEdit($event)"
+    (delete)="onDelete($event)">
+</app-crud-list>

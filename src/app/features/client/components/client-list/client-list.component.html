@@ -1,1 +1,3 @@
-<p>client-list works!</p>
+<app-crud-list [items]="clients" [displayFields]="displayFields" (view)="onView($event)" (edit)="onEdit($event)"
+    (delete)="onDelete($event)">
+</app-crud-list>

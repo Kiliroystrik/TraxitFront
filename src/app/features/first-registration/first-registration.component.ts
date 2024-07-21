@@ -1,5 +1,5 @@
-import { IFormMap } from '../../../interfaces/formMap';
-import { CompanyService } from '../../services/company.service';
+import { CompanyService } from './../company/services/company.service';
+import { IFormMap } from '../../shared/interfaces/formMap';
 import { Component } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Register } from '../auth/interfaces/Register';

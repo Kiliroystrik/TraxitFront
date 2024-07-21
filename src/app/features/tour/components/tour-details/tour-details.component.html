@@ -4,16 +4,14 @@
 
     <div class="tour-info">
         <p><strong>ID:</strong> {{ tour.id }}</p>
-        <p><strong>Date de création:</strong> {{ tour.createdAt | date:'short' }}</p>
-        <p><strong>Dernière mise à jour:</strong> {{ tour.updatedAt | date:'short' }}</p>
-        <p><strong>Date de début:</strong> {{ tour.startDate | date:'short' }}</p>
-        <p><strong>Date de fin:</strong> {{ tour.endDate | date:'short' }}</p>
+        <p><strong>Date de création:</strong> {{ tour.createdAt }}</p>
+        <p><strong>Dernière mise à jour:</strong> {{ tour.updatedAt }}</p>
+        <p><strong>Date de début:</strong> {{ tour.startDate }}</p>
+        <p><strong>Date de fin:</strong> {{ tour.endDate }}</p>
         <p><strong>Entreprise:</strong> {{ tour.company }}</p>
     </div>
 
     @if(tour.tourSteps && tour.tourSteps.length > 0){
-
-    }
     <div class="tour-steps">
         <h3>Étapes de la tournée</h3>
         <ul>
@@ -25,8 +23,9 @@
             }
         </ul>
     </div>
+    }
 
-    @if (tour.driverAssignments && tour.driverAssignments && tour.driverAssignments.length > 0) {
+    @if (tour.driverAssignments && tour.driverAssignments.length > 0) {
     <div class="driver-assignments">
         <h3>Assignations de conducteurs</h3>
         <ul>

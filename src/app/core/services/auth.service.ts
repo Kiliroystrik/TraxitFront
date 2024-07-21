@@ -3,7 +3,7 @@ import { Observable, BehaviorSubject, map } from 'rxjs';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { environment } from '../../../environment/environment';
-import { User } from '../../../interfaces/user';
+import { User } from '../../features/user/interfaces/user';
 import { jwtDecode } from 'jwt-decode';
 
 @Injectable({

@@ -6,7 +6,7 @@ body {
 }
 button {
     // width: 100%;
-    padding: 15px;
+    padding: 7px 15px;
     background-color: #007bff;
     color: white;
     border: none;
@@ -18,6 +18,13 @@ button {
     &:hover {
         background-color: #0056b3;
     }
+}
+
+button:disabled {
+    background-color: #cccccc; /* Couleur de fond grise pour indiquer que le bouton est désactivé */
+    cursor: not-allowed; /* Curseur de type "interdit" pour indiquer que le bouton ne peut pas être cliqué */
+    color: #666666; /* Couleur du texte grise */
+    border: 1px solid #aaaaaa; /* Bordure grise */
 }
 
 .main-container {

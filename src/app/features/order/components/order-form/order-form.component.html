@@ -1,0 +1,69 @@
+<div class="order-form">
+    <h1>Créer une nouvelle commande</h1>
+    <div class="tabs">
+        <button class="tab-button" (click)="selectTab('basic')">Informations de Base</button>
+        <button class="tab-button" (click)="selectTab('steps')">Étapes de la Commande</button>
+    </div>
+    <form [formGroup]="orderForm" (ngSubmit)="createOrder()">
+
+        <!-- Section Informations de Base -->
+        @if(selectedTab === 'basic') {
+        <div class="form-section">
+            <h2>Informations de Base</h2>
+            <div>
+                <label for="company">Entreprise:</label>
+                <input id="company" formControlName="company" required>
+                @if(orderForm.get('company')?.invalid && orderForm.get('company')?.touched) {
+                <div class="error-message">L'entreprise est requise.</div>
+                }
+            </div>
+            <div>
+                <label for="client">Client:</label>
+                <input id="client" formControlName="client" required>
+                @if(orderForm.get('client')?.invalid && orderForm.get('client')?.touched) {
+                <div class="error-message">Le client est requis.</div>
+                }
+            </div>
+        </div>
+        }
+
+        <!-- Section Étapes de la Commande -->
+        @if(selectedTab === 'steps') {
+        <div class="form-section">
+            <h2>Étapes de la Commande</h2>
+            <div class="steps-grid">
+                @for(step of orderSteps.controls; track step) {
+                <div class="step-box" (click)="openStepModal(step)">
+                    Étape {{step.value.number}}
+                </div>
+                }
+                <button type="button" (click)="addStep()">Ajouter une Étape</button>
+            </div>
+        </div>
+        }
+
+        <!-- Bouton de Soumission -->
+        <button type="submit" [disabled]="orderForm.invalid">Créer</button>
+    </form>
+</div>
+
+<!-- Vue Modale pour les Détails des Étapes -->
+@if(selectedStep) {
+<div class="modal">
+    <div class="modal-content">
+        <span class="close-button" (click)="closeStepModal()">&times;</span>
+        <h2>Détails de l'Étape</h2>
+        <!-- Détails de l'Étape Ici -->
+        <form [formGroup]="selectedStep">
+            <div>
+                <label for="description">Description:</label>
+                <input id="description" formControlName="description" required>
+            </div>
+            <div>
+                <label for="date">Date:</label>
+                <input id="date" formControlName="date" type="date" required>
+            </div>
+        </form>
+    </div>
+</div>
+}

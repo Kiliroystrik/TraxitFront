@@ -2,9 +2,9 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { environment } from '../../environment/environment';
-import { Tour } from '../../interfaces/tour';
-import { TourStep } from '../../interfaces/tourstep';
+import { environment } from '../../../../environment/environment';
+import { Tour } from '../interfaces/tour';
+import { TourStep } from '../../tour-step/interfaces/tourstep';
 
 @Injectable({
   providedIn: 'root'

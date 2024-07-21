@@ -8,8 +8,10 @@
         @if(username){
         <a routerLink="/dashboard" class="nav-link">Dashboard</a>
         <span>Bienvenue {{ username }}</span>
+        <a routerLink="/gestion-des-tournees" class="nav-link">Gestion des tournées</a>
+        <a routerLink="/gestion-des-clients" class="nav-link">Gestion des clients</a>
+        <a routerLink="/gestion-des-commandes" class="nav-link">Gestion des commandes</a>
         <a routerLink="/login" class="nav-link" (click)="logout()">Se deconnecter</a>
-        <a routerLink="/tournees" class="nav-link">Tournées</a>
         }
     </nav>
 </header>
