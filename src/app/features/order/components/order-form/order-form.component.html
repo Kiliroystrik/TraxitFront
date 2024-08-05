@@ -19,7 +19,12 @@
             </div>
             <div>
                 <label for="client">Client:</label>
-                <input id="client" formControlName="client" required>
+                <select id="client" formControlName="client" required>
+                    <option value="" disabled selected>Choisir un client</option>
+                    @for(client of clients; track client) {
+                    <option [value]="client.id">{{ client.name }}</option>
+                    }
+                </select>
                 @if(orderForm.get('client')?.invalid && orderForm.get('client')?.touched) {
                 <div class="error-message">Le client est requis.</div>
                 }

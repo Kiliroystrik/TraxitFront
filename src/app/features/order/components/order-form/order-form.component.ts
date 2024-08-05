@@ -1,8 +1,10 @@
+import { ClientService } from './../../../client/services/client.service';
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators, FormArray, ReactiveFormsModule } from '@angular/forms';
 import { OrderService } from '../../services/order.service';
 import { Order } from '../../interfaces/order';
+import { Client } from '../../../client/interfaces/client';
 
 @Component({
   selector: 'app-order-form',
@@ -16,20 +18,25 @@ export class OrderFormComponent implements OnInit {
   selectedTab: string = 'basic';
   selectedStep: any = null;
 
+  clients?: Client[];
+
   constructor(
     private fb: FormBuilder,
     private orderService: OrderService,
-    private router: Router
+    private router: Router,
+    private ClientService: ClientService,
   ) { }
 
   ngOnInit(): void {
     this.orderForm = this.fb.group({
       company: ['', Validators.required],
-      client: ['', Validators.required],
+      client: [[''], Validators.required],
       createdAt: [new Date(), Validators.required],
       updatedAt: [new Date(), Validators.required],
       orderSteps: this.fb.array([])
     });
+
+    this.getClients();
   }
 
   get orderSteps(): FormArray {
@@ -64,5 +71,16 @@ export class OrderFormComponent implements OnInit {
         this.router.navigate(['/gestion-des-commandes', order.id]);  // Redirige vers la page de détails de la nouvelle commande
       });
     }
+  }
+
+  getClients(): void {
+    this.ClientService.getClients().subscribe({
+      next: clients => {
+        this.clients = clients;
+      },
+      error: error => {
+        console.error('Erreur lors de la recuperation des clients:', error);
+      }
+    })
   }
 }
