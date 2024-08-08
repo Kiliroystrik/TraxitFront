@@ -84,3 +84,17 @@
         }
     }
 }
+.step-card {
+    position: relative;
+    cursor: pointer;
+}
+
+.step-card mat-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.step-card mat-card-content {
+    cursor: pointer;
+}

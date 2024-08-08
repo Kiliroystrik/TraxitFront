@@ -2,22 +2,22 @@ import { Injectable } from '@angular/core';
 import { environment } from '../../../../environment/environment';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { map, Observable } from 'rxjs';
-import { Order } from '../interfaces/order';
+import { FuelType } from '../interfaces/fueltype';
 
 @Injectable({
   providedIn: 'root'
 })
-export class OrderService {
-  private apiUrl = `${environment.apiUrl}/orders`;
+export class FuelTypeService {
+  private apiUrl = `${environment.apiUrl}/fuel_types`;
 
   constructor(private http: HttpClient) { }
 
-  getOrders(
+  getFuelTypes(
     sort: string = 'id',
     order: string = 'asc',
     page: number = 1,
     itemsPerPage: number = 10
-  ): Observable<{ items: Order[], totalItems: number }> {
+  ): Observable<{ items: FuelType[], totalItems: number }> {
     let params = new HttpParams()
       .set('order[' + sort + ']', order)
       .set('page', page.toString())
@@ -31,23 +31,19 @@ export class OrderService {
     );
   }
 
-  getOrder(id: string): Observable<Order> {
-    return this.http.get<Order>(`${this.apiUrl}/${id}`);
+  getFuelType(id: string): Observable<FuelType> {
+    return this.http.get<FuelType>(`${this.apiUrl}/${id}`);
   }
 
-  createOrder(order: Order): Observable<Order> {
-    const headers = {
-      'Content-Type': 'application/ld+json',
-      'accept': 'application/ld+json'
-    };
-    return this.http.post<Order>(this.apiUrl, order, { headers });
+  createFuelType(order: FuelType): Observable<FuelType> {
+    return this.http.post<FuelType>(this.apiUrl, order);
   }
 
-  updateOrder(order: Order): Observable<Order> {
-    return this.http.put<Order>(`${this.apiUrl}/${order.id}`, order);
+  updateFuelType(order: FuelType): Observable<FuelType> {
+    return this.http.put<FuelType>(`${this.apiUrl}/${order.id}`, order);
   }
 
-  deleteOrder(id: string): Observable<void> {
+  deleteFuelType(id: string): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}/${id}`);
   }
 }

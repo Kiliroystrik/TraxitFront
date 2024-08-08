@@ -52,8 +52,7 @@ export class ClientListComponent implements OnInit {
       name: 'New Client',
       email: 'client@example.com',
       phone: '123-456-7890',
-      company: '/api/companies/1', // replace with actual company API resource identifier
-      address: '123 Main St',
+
       orders: []
     };
     this.clientService.createClient(newClient).subscribe((client) => {

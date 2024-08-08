@@ -1,147 +1,22 @@
-// Variables
-$primary-color: #007bff;
-$secondary-color: #6c757d;
-$light-bg: #f8f9fa;
-$dark-bg: #343a40;
-$cta-color: #28a745;
-$cta-hover-color: #218838;
-
-// Mixin for responsive typography
-@mixin responsive-font($min-size, $max-size) {
-    font-size: $min-size;
-    @media screen and (min-width: 768px) {
-        font-size: $max-size;
-    }
+.sidenav-container {
+    height: 100%;
 }
 
-// Header Styles
-header {
-    background-color: $dark-bg;
-    padding: 20px;
-    nav {
-        display: flex;
-        justify-content: flex-end;
-        .nav-link {
-            color: white;
-            text-decoration: none;
-            margin-left: 20px;
-            transition: color 0.3s;
-            &:hover {
-                color: $primary-color;
-            }
-        }
-        span {
-            color: white;
-            margin-left: 20px;
-        }
-    }
+.sidenav {
+    width: 200px;
 }
 
-// Main Container Styles
-.main-container {
-    // Hero Section Styles
-    .hero {
-        background-color: $light-bg;
-        color: white;
-        text-align: center;
-        padding: 150px 20px;
-        .hero-content {
-            max-width: 700px;
-            margin: 0 auto;
-            h1 {
-                @include responsive-font(2.5rem, 4rem);
-                margin-bottom: 20px;
-            }
-            p {
-                @include responsive-font(1rem, 1.5rem);
-                margin-bottom: 30px;
-            }
-            .cta-button {
-                background-color: $cta-color;
-                color: white;
-                border: none;
-                padding: 15px 30px;
-                font-size: 1.2rem;
-                cursor: pointer;
-                border-radius: 5px;
-                transition: background-color 0.3s;
-                &:hover {
-                    background-color: $cta-hover-color;
-                }
-            }
-        }
-    }
+.sidenav .mat-toolbar {
+    background: inherit;
+}
 
-    // Features Section Styles
-    .features {
-        background-color: $light-bg;
-        text-align: center;
-        padding: 60px 20px;
-        h2 {
-            @include responsive-font(1.5rem, 2.5rem);
-            margin-bottom: 50px;
-        }
-        .feature {
-            margin-bottom: 30px;
-            h3 {
-                @include responsive-font(1.2rem, 1.8rem);
-                margin-bottom: 10px;
-            }
-            p {
-                font-size: 1rem;
-                color: $secondary-color;
-            }
-        }
-    }
+.mat-toolbar.mat-primary {
+    position: sticky;
+    top: 0;
+    z-index: 1;
+}
 
-    // Testimonials Section Styles
-    .testimonials {
-        background-color: white;
-        text-align: center;
-        padding: 60px 20px;
-        h2 {
-            @include responsive-font(1.5rem, 2.5rem);
-            margin-bottom: 50px;
-        }
-        .testimonial {
-            max-width: 600px;
-            margin: 0 auto 30px;
-            p {
-                font-size: 1.2rem;
-                font-style: italic;
-                color: $secondary-color;
-                margin-bottom: 10px;
-            }
-            span {
-                display: block;
-                font-size: 1rem;
-                color: $primary-color;
-            }
-        }
-    }
-
-    // Call to Action Section Styles
-    .cta {
-        background-color: $dark-bg;
-        color: white;
-        text-align: center;
-        padding: 60px 20px;
-        h2 {
-            @include responsive-font(1.5rem, 2.5rem);
-            margin-bottom: 30px;
-        }
-        .cta-button {
-            background-color: $cta-color;
-            color: white;
-            border: none;
-            padding: 15px 30px;
-            font-size: 1.2rem;
-            cursor: pointer;
-            border-radius: 5px;
-            transition: background-color 0.3s;
-            &:hover {
-                background-color: $cta-hover-color;
-            }
-        }
-    }
+.active {
+    background-color: #007bff;
+    color: white;
 }

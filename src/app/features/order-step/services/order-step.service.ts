@@ -1,8 +1,8 @@
+import { OrderStep } from './../interfaces/orderstep';
 import { Injectable } from '@angular/core';
 import { environment } from '../../../../environment/environment';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { map, Observable } from 'rxjs';
-import { Order } from '../interfaces/order';
 
 @Injectable({
   providedIn: 'root'
@@ -12,12 +12,12 @@ export class OrderService {
 
   constructor(private http: HttpClient) { }
 
-  getOrders(
+  getOrderSteps(
     sort: string = 'id',
     order: string = 'asc',
     page: number = 1,
     itemsPerPage: number = 10
-  ): Observable<{ items: Order[], totalItems: number }> {
+  ): Observable<{ items: OrderStep[], totalItems: number }> {
     let params = new HttpParams()
       .set('order[' + sort + ']', order)
       .set('page', page.toString())
@@ -31,23 +31,19 @@ export class OrderService {
     );
   }
 
-  getOrder(id: string): Observable<Order> {
-    return this.http.get<Order>(`${this.apiUrl}/${id}`);
+  getOrderStep(id: string): Observable<OrderStep> {
+    return this.http.get<OrderStep>(`${this.apiUrl}/${id}`);
   }
 
-  createOrder(order: Order): Observable<Order> {
-    const headers = {
-      'Content-Type': 'application/ld+json',
-      'accept': 'application/ld+json'
-    };
-    return this.http.post<Order>(this.apiUrl, order, { headers });
+  createOrderStep(order: OrderStep): Observable<OrderStep> {
+    return this.http.post<OrderStep>(this.apiUrl, order);
   }
 
-  updateOrder(order: Order): Observable<Order> {
-    return this.http.put<Order>(`${this.apiUrl}/${order.id}`, order);
+  updateOrderStep(order: OrderStep): Observable<OrderStep> {
+    return this.http.put<OrderStep>(`${this.apiUrl}/${order.id}`, order);
   }
 
-  deleteOrder(id: string): Observable<void> {
+  deleteOrderStep(id: string): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}/${id}`);
   }
 }

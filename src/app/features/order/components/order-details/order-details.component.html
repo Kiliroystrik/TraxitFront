@@ -1,4 +1,74 @@
+@if (order) {
+
+<mat-card>
+    <mat-card-title>Commande #{{ order.serialNumber }}</mat-card-title>
+    <mat-card-content>
+        <mat-tab-group>
+            <mat-tab label="General Information">
+                <div>
+                    <strong>Serial Number:</strong> {{ order.serialNumber }}
+                </div>
+                <div>
+                    <strong>Created At:</strong> {{ order.createdAt | date: 'long' }}
+                </div>
+                <div>
+                    <strong>Updated At:</strong> {{ order.updatedAt | date: 'long' }}
+                </div>
+                <div>
+                    <strong>Company:</strong> {{ order.company?.name }}
+                </div>
+                <div>
+                    <strong>Client:</strong> {{ order.client?.name }}
+                </div>
+                <div>
+                    <strong>Client Email:</strong> {{ order.client?.email }}
+                </div>
+                <div>
+                    <strong>Client Phone:</strong> {{ order.client?.phone }}
+                </div>
+                <div>
+                    <strong>Client Address:</strong>
+                    {{ order.client?.address?.street }},
+                    {{ order.client?.address?.city }},
+                    {{ order.client?.address?.zipCode }},
+                    {{ order.client?.address?.stateProvince }},
+                    {{ order.client?.address?.country }}
+                </div>
+            </mat-tab>
+            <mat-tab label="Order Steps">
+                <h3>Order Steps</h3>
+                <mat-list>
+                    <div>
+                        @for (step of order.orderSteps; track step) {
+                        <mat-card>
+                            <mat-card-title>Step {{ step.position }}</mat-card-title>
+                            <mat-card-content>
+                                <div><strong>Type:</strong> {{ step.type }}</div>
+                                <div><strong>Description:</strong> {{ step.description }}</div>
+                                <div><strong>Quantity:</strong> {{ step.quantity }}</div>
+                                <div><strong>Scheduled Arrival:</strong> {{ step.scheduledArrival | date: 'long' }}
+                                </div>
+                                <div><strong>Scheduled Departure:</strong> {{ step.scheduledDeparture | date: 'long' }}
+                                </div>
+                                <div><strong>Address:</strong>
+                                    {{ step.address?.street }},
+                                    {{ step.address?.city }},
+                                    {{ step.address?.zipCode }},
+                                    {{ step.address?.stateProvince }},
+                                    {{ step.address?.country }}
+                                </div>
+                            </mat-card-content>
+                        </mat-card>
+                        }
+                    </div>
+                </mat-list>
+            </mat-tab>
+        </mat-tab-group>
+    </mat-card-content>
+</mat-card>
+
+}@else{
 <div>
-    <h1>Détails de la commande</h1>
-    <app-crud-detail [item]="order" [fields]="displayFields"></app-crud-detail>
+    <h1>No order found</h1>
 </div>
+}

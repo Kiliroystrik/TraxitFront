@@ -1,22 +1,43 @@
-<header>
-    <nav>
-        <a routerLink="/" class="nav-link">Accueil</a>
-        @if(!username){
-        <a routerLink="/login" class="nav-link">Se connecter</a>
-        <a routerLink="/register" class="nav-link">S'inscrire</a>
-        }
-        @if(username){
-        <a routerLink="/dashboard" class="nav-link">Dashboard</a>
-        <span>Bienvenue {{ username }}</span>
-        <a routerLink="/gestion-des-tournees" class="nav-link">Gestion des tournées</a>
-        <a routerLink="/gestion-des-clients" class="nav-link">Gestion des clients</a>
-        <a routerLink="/gestion-des-commandes" class="nav-link">Gestion des commandes</a>
-        <a routerLink="/login" class="nav-link" (click)="logout()">Se deconnecter</a>
-        }
-    </nav>
-</header>
-
-
-<main class="main-container">
-    <router-outlet></router-outlet>
-</main>
+<mat-sidenav-container class="sidenav-container">
+    <mat-sidenav #drawer class="sidenav" fixedInViewport [attr.role]="(isHandset$ | async) ? 'dialog' : 'navigation'"
+        [mode]="(isHandset$ | async) ? 'over' : 'side'" [opened]="(isHandset$ | async) === false">
+        <mat-toolbar>Menu</mat-toolbar>
+        <mat-nav-list>
+            <!-- <a mat-list-item routerLink="/" routerLinkActive="active" class="nav-link">Accueil</a> -->
+            @if(username){
+            <a mat-list-item routerLink="/dashboard" routerLinkActive="active" class="nav-link">Dashboard</a>
+            <a mat-list-item routerLink="/gestion-des-tournees" routerLinkActive="active" class="nav-link">Gestion des
+                tournées</a>
+            <a mat-list-item routerLink="/gestion-des-clients" routerLinkActive="active" class="nav-link">Gestion des
+                clients</a>
+            <a mat-list-item routerLink="/gestion-des-commandes" routerLinkActive="active" class="nav-link">
+                Gestion des commandes
+            </a>
+            }
+        </mat-nav-list>
+    </mat-sidenav>
+    <mat-sidenav-content>
+        <mat-toolbar color="primary">
+            @if (isHandset$ | async) {
+            <button type="button" aria-label="Toggle sidenav" mat-icon-button (click)="drawer.toggle()">
+                <mat-icon aria-label="Side nav toggle icon">menu</mat-icon>
+            </button>
+            }
+            <span>TraxitFront</span>
+            @if(username){
+            <span>Bienvenue {{ username }}</span>
+            <a mat-icon-button routerLink="/login" class="nav-link" (click)="logout()">
+                <mat-icon>exit_to_app</mat-icon>
+            </a>
+            }@else{
+            <a mat-icon-button routerLink="/login" class="nav-link">
+                <mat-icon>login</mat-icon>
+            </a>
+            <a mat-icon-button routerLink="/register" class="nav-link">
+                <mat-icon>person_add</mat-icon>
+            </a>
+            }
+        </mat-toolbar>
+        <router-outlet></router-outlet>
+    </mat-sidenav-content>
+</mat-sidenav-container>
