@@ -7,8 +7,8 @@ import { map, Observable } from 'rxjs';
 @Injectable({
   providedIn: 'root'
 })
-export class OrderService {
-  private apiUrl = `${environment.apiUrl}/orders`;
+export class OrderStepService {
+  private apiUrl = `${environment.apiUrl}/order_steps`;
 
   constructor(private http: HttpClient) { }
 
@@ -31,19 +31,40 @@ export class OrderService {
     );
   }
 
+  getOrderStepsByOrder(id: string): Observable<{ items: OrderStep[] }> {
+    let params = new HttpParams()
+    return this.http.get<any>(`${environment.apiUrl}/orders/${id}/order_steps`, { params }).pipe(
+      map(response => ({
+        items: response['hydra:member'],
+      }))
+    );
+  }
+
   getOrderStep(id: string): Observable<OrderStep> {
     return this.http.get<OrderStep>(`${this.apiUrl}/${id}`);
   }
 
-  createOrderStep(order: OrderStep): Observable<OrderStep> {
-    return this.http.post<OrderStep>(this.apiUrl, order);
+  createOrderStep(orderStep: OrderStep): Observable<OrderStep> {
+    const headers = {
+      'Content-Type': 'application/ld+json',
+      'accept': 'application/ld+json'
+    };
+    return this.http.post<OrderStep>(this.apiUrl, orderStep, { headers });
   }
 
-  updateOrderStep(order: OrderStep): Observable<OrderStep> {
-    return this.http.put<OrderStep>(`${this.apiUrl}/${order.id}`, order);
+  updateOrderStep(orderStep: OrderStep): Observable<OrderStep> {
+    const headers = {
+      'Content-Type': 'application/ld+json',
+      'accept': 'application/ld+json'
+    };
+    return this.http.put<OrderStep>(`${this.apiUrl}/${orderStep.id}`, orderStep, { headers });
   }
 
   deleteOrderStep(id: string): Observable<void> {
-    return this.http.delete<void>(`${this.apiUrl}/${id}`);
+    const headers = {
+      'Content-Type': 'application/ld+json',
+      'accept': 'application/ld+json'
+    };
+    return this.http.delete<void>(`${this.apiUrl}/${id}`, { headers });
   }
 }

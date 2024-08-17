@@ -1,24 +1,17 @@
-import { UnitService } from './../../../unit/services/unit.service';
-import { Unit } from './../../../unit/interfaces/unit';
-import { FuelTypeService } from './../../../fuel-type/services/fuel-type.service';
-import { AddressService } from '../../../address/services/address.service';
-import { Component, Inject } from '@angular/core';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { Component, Inject, Input, OnInit } from '@angular/core';
+import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { MatDialogModule } from '@angular/material/dialog';
+import { Address } from '../../../address/interfaces/address';
+import { FuelType } from '../../../fuel-type/interfaces/fueltype';
+import { Status } from '../../../status/interfaces/status';
+import { Product } from '../../../product/interfaces/product';
+import { Unit } from '../../../unit/interfaces/unit';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
-import { MatDatepickerModule } from '@angular/material/datepicker';
-import { Observable } from 'rxjs';
-import { Address } from '../../../address/interfaces/address';
 import { MatOptionModule } from '@angular/material/core';
 import { MatSelectModule } from '@angular/material/select';
-import { FuelType } from '../../../fuel-type/interfaces/fueltype';
-import { StatusService } from '../../../status/services/status.service';
-import { Status } from '../../../status/interfaces/status';
-import { Product } from '../../../product/interfaces/product';
-import { ProductService } from '../../../product/services/product.service';
 
 @Component({
   selector: 'app-step-modal',
@@ -36,7 +29,7 @@ import { ProductService } from '../../../product/services/product.service';
     MatSelectModule
   ],
 })
-export class StepModalComponent {
+export class StepModalComponent implements OnInit {
   stepForm: FormGroup;
   stepTypes: string[] = ['Retrait', 'Dépôt', 'Transport', 'Inspection'];
   addresses: Address[] = [];
@@ -44,102 +37,68 @@ export class StepModalComponent {
   statuses: Status[] = [];
   products: Product[] = [];
   units: Unit[] = [];
+
   constructor(
     private fb: FormBuilder,
     public dialogRef: MatDialogRef<StepModalComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
-    private addressService: AddressService,
-    private fuelTypeService: FuelTypeService,
-    private statusService: StatusService,
-    private productService: ProductService,
-    private unitService: UnitService,
   ) {
     this.stepForm = this.fb.group({
-      type: [data?.type || '', Validators.required],
-      description: [data?.description || '', Validators.required],
-      scheduledArrival: [data?.scheduledArrival || '', Validators.required],
-      scheduledDeparture: [data?.scheduledDeparture || '', Validators.required],
-      address: [data?.address || '', Validators.required],
-      status: [data?.status || '', Validators.required],
-      product: [data?.product || '', Validators.required],
-      fuelType: [data?.fuelType || '', Validators.required],
-      unit: [data?.unit || '', Validators.required],
-      quantity: [data?.quantity || 0, Validators.required],
-      position: [data?.position || 0, Validators.required],
-    });
-
-    this.getAddresses();
-    this.getFuelTypes();
-    this.getStatuses();
-    this.getProducts();
-    this.getUnits();
-  }
-
-  getAddresses(): void {
-    this.addressService.getAddresses().subscribe({
-      next: addresses => {
-        this.addresses = addresses.items;
-      },
-      error: error => {
-        console.error('Erreur lors de la recuperation des clients:', error);
-      }
+      type: [data?.step?.type || '', Validators.required],
+      description: [data?.step?.description || '', Validators.required],
+      scheduledArrival: [data?.step?.scheduledArrival || '', Validators.required],
+      scheduledDeparture: [data?.step?.scheduledDeparture || '', Validators.required],
+      address: [data?.step?.address?.['@id'] || '', Validators.required], // Utilisation de l'identifiant @id
+      status: [data?.step?.status?.['@id'] || '', Validators.required], // Utilisation de l'identifiant @id
+      product: [data?.step?.product?.['@id'] || '', Validators.required], // Utilisation de l'identifiant @id
+      unit: [data?.step?.unit?.['@id'] || '', Validators.required], // Utilisation de l'identifiant @id
+      quantity: [data?.step?.quantity || 0, Validators.required],
+      position: [data?.step?.position || 0, Validators.required],
     });
   }
 
-  getUnits(): void {
-    this.unitService.getUnits().subscribe({
-      next: units => {
-        this.units = units.items;
-      },
-      error: error => {
-        console.error('Erreur lors de la recuperation des clients:', error);
-      }
-    });
-  }
-
-  getFuelTypes(): void {
-    this.fuelTypeService.getFuelTypes().subscribe({
-      next: fuelTypes => {
-        this.fuelTypes = fuelTypes.items;
-      },
-      error: error => {
-        console.error('Erreur lors de la recuperation des clients:', error);
-      }
-    });
-  }
-
-  getStatuses(): void {
-    this.statusService.getStatuses().subscribe({
-      next: statuses => {
-        this.statuses = statuses.items;
-      },
-      error: error => {
-        console.error('Erreur lors de la recuperation des clients:', error);
-      }
-    });
-  }
-
-  getProducts(): void {
-    this.productService.getProducts().subscribe({
-      next: products => {
-        this.products = products.items;
-      },
-      error: error => {
-        console.error('Erreur lors de la recuperation des clients:', error);
-      }
-    });
+  ngOnInit(): void {
+    this.addresses = this.data.addresses;
+    this.fuelTypes = this.data.fuelTypes;
+    this.statuses = this.data.statuses;
+    this.products = this.data.products;
+    this.units = this.data.units;
   }
 
   onSave(): void {
     if (this.stepForm.valid) {
+
       const formValue = this.stepForm.value;
-      formValue.quantity = formValue.quantity.toString(); // Convert float to string
-      console.log('valid step form', formValue);
-      this.data = formValue;
-      this.dialogRef.close(formValue);
+
+      // Convertir la quantité en chaîne de caractères
+      formValue.quantity = formValue.quantity.toString();
+
+      // Reconstruire l'objet step avec les entités sélectionnées
+      const updatedStep = {
+        ...this.data.step,
+        ...this.stepForm.value,
+        address: this.addresses.find(addr => addr['@id'] === this.stepForm.value.address),
+        status: this.statuses.find(stat => stat['@id'] === this.stepForm.value.status),
+        product: this.products.find(prod => prod['@id'] === this.stepForm.value.product),
+        unit: this.units.find(unit => unit['@id'] === this.stepForm.value.unit),
+      };
+
+      this.dialogRef.close(updatedStep);
     } else {
       console.log('invalid step form', this.stepForm.value);
+      this.getFormValidationErrors();
     }
+  }
+
+  getFormValidationErrors() {
+    Object.keys(this.stepForm.controls).forEach(key => {
+      const controlErrors = this.stepForm.get(key)?.errors;
+      if (controlErrors != null) {
+        Object.keys(controlErrors).forEach(keyError => {
+          console.log(`Error in ${key}: ${keyError} ${controlErrors[keyError]}`);
+        });
+      }
+    });
   }
 
   onClose(): void {

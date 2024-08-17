@@ -6,11 +6,11 @@
             <mat-form-field appearance="fill">
                 <mat-label>Client</mat-label>
                 <mat-select formControlName="client" required>
-                    @for(client of clients; track client){
+                    @for (client of clients; track client) {
                     <mat-option [value]="client['@id']">{{ client.name }}</mat-option>
                     }
                 </mat-select>
-                @if (orderForm.get('client')?.errors && orderForm.get('client')?.touched) {
+                @if (orderForm.get('client')?.errors && orderForm.get('client')?.touched){
                 <mat-error>Le client est requis.</mat-error>
                 }
             </mat-form-field>
@@ -30,15 +30,12 @@
                 </button>
             </mat-card-header>
             <mat-card-content>
-
                 <p>{{ step.get('description')?.value }}</p>
             </mat-card-content>
         </mat-card>
         }
-        <button mat-raised-button color="primary" type="button" (click)="addStep()">Ajouter une
-            Étape</button>
+        <button mat-raised-button color="primary" type="button" (click)="addStep()">Ajouter une Étape</button>
     </div>
-
     <!-- Bouton de Soumission -->
     <button mat-raised-button color="primary" type="submit" [disabled]="orderForm.invalid" (click)="createOrder()"
         style="margin-top: 10px;">Créer</button>

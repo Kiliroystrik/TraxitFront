@@ -4,24 +4,30 @@ import { FormBuilder, FormGroup, Validators, FormArray, ReactiveFormsModule } fr
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { ClientService } from './../../../client/services/client.service';
 import { OrderService } from '../../services/order.service';
-import { Order } from '../../interfaces/order';
 import { Client } from '../../../client/interfaces/client';
+import { AddressService } from '../../../address/services/address.service';
+import { FuelTypeService } from '../../../fuel-type/services/fuel-type.service';
+import { StatusService } from '../../../status/services/status.service';
+import { ProductService } from '../../../product/services/product.service';
+import { UnitService } from '../../../unit/services/unit.service';
 import { StepModalComponent } from '../../../order-step/components/step-modal/step-modal.component';
+import { ConfirmDeleteModalComponent } from '../../../../shared/components/confirm-delete-modal/confirm-delete-modal.component';
+import { Order } from '../../interfaces/order';
 import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatTableModule } from '@angular/material/table';
+import { MatTabsModule } from '@angular/material/tabs';
 import { MatSelectModule } from '@angular/material/select';
+import { MatTableModule } from '@angular/material/table';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
-import { MatTabsModule } from '@angular/material/tabs';
 import { MatIconModule } from '@angular/material/icon';
 import { MatCardModule } from '@angular/material/card';
-import { ConfirmDeleteModalComponent } from '../../../../shared/components/confirm-delete-modal/confirm-delete-modal.component';
 
 @Component({
   selector: 'app-order-form',
+  templateUrl: './order-form.component.html',
+  styleUrls: ['./order-form.component.scss'],
   standalone: true,
   imports: [
-    StepModalComponent,
     ReactiveFormsModule,
     MatFormFieldModule,
     MatDialogModule,
@@ -34,19 +40,27 @@ import { ConfirmDeleteModalComponent } from '../../../../shared/components/confi
     MatIconModule,
     MatCardModule
   ],
-  templateUrl: './order-form.component.html',
-  styleUrls: ['./order-form.component.scss']
 })
 export class OrderFormComponent implements OnInit {
   orderForm!: FormGroup;
   selectedTab: string = 'basic';
   clients: Client[] = [];
+  addresses: any[] = [];
+  fuelTypes: any[] = [];
+  statuses: any[] = [];
+  products: any[] = [];
+  units: any[] = [];
 
   constructor(
     private fb: FormBuilder,
     private orderService: OrderService,
     private router: Router,
     private clientService: ClientService,
+    private addressService: AddressService,
+    // private fuelTypeService: FuelTypeService,
+    private statusService: StatusService,
+    private productService: ProductService,
+    private unitService: UnitService,
     public dialog: MatDialog
   ) { }
 
@@ -57,6 +71,7 @@ export class OrderFormComponent implements OnInit {
     });
 
     this.getClients();
+    this.loadSharedData();
   }
 
   get orderSteps(): FormArray {
@@ -70,7 +85,6 @@ export class OrderFormComponent implements OnInit {
       scheduledArrival: ['', Validators.required],
       scheduledDeparture: ['', Validators.required],
       address: ['', Validators.required],
-      fuelType: ['', Validators.required],
       product: ['', Validators.required],
       unit: ['', Validators.required],
       quantity: [0, Validators.required],
@@ -99,11 +113,17 @@ export class OrderFormComponent implements OnInit {
     });
   }
 
-
   openStepModal(step: any): void {
     const dialogRef = this.dialog.open(StepModalComponent, {
       width: '400px',
-      data: step.value
+      data: {
+        step: step.value,
+        addresses: this.addresses,
+        fuelTypes: this.fuelTypes,
+        statuses: this.statuses,
+        products: this.products,
+        units: this.units
+      }
     });
 
     dialogRef.afterClosed().subscribe(result => {
@@ -140,6 +160,53 @@ export class OrderFormComponent implements OnInit {
       },
       error: error => {
         console.error('Erreur lors de la recuperation des clients:', error);
+      }
+    });
+  }
+
+  loadSharedData(): void {
+    this.addressService.getAddresses().subscribe({
+      next: addresses => {
+        this.addresses = addresses.items;
+      },
+      error: error => {
+        console.error('Erreur lors de la recuperation des adresses:', error);
+      }
+    });
+
+    // this.fuelTypeService.getFuelTypes().subscribe({
+    //   next: fuelTypes => {
+    //     this.fuelTypes = fuelTypes.items;
+    //   },
+    //   error: error => {
+    //     console.error('Erreur lors de la recuperation des types de carburant:', error);
+    //   }
+    // });
+
+    this.statusService.getStatuses().subscribe({
+      next: statuses => {
+        this.statuses = statuses.items;
+      },
+      error: error => {
+        console.error('Erreur lors de la recuperation des statuts:', error);
+      }
+    });
+
+    this.productService.getProducts().subscribe({
+      next: products => {
+        this.products = products.items;
+      },
+      error: error => {
+        console.error('Erreur lors de la recuperation des produits:', error);
+      }
+    });
+
+    this.unitService.getUnits().subscribe({
+      next: units => {
+        this.units = units.items;
+      },
+      error: error => {
+        console.error('Erreur lors de la recuperation des unités:', error);
       }
     });
   }

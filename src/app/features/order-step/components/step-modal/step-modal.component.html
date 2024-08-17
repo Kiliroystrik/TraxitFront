@@ -1,6 +1,17 @@
 <h2 mat-dialog-title>Détails de l'Étape</h2>
 <mat-dialog-content>
     <form [formGroup]="stepForm">
+        <mat-form-field appearance="fill">
+            <mat-label>Type</mat-label>
+            <mat-select formControlName="type" required>
+                @for(type of stepTypes; track type) {
+                <mat-option [value]="type">{{ type }}</mat-option>
+                }
+            </mat-select>
+            @if (stepForm.get('type')?.errors && stepForm.get('type')?.touched) {
+            <mat-error>Le type est requis.</mat-error>
+            }
+        </mat-form-field>
         <mat-form-field>
             <mat-label>Status</mat-label>
             <mat-select formControlName="status" required>
@@ -10,18 +21,6 @@
             </mat-select>
             @if (stepForm.get('status')?.errors && stepForm.get('status')?.touched) {
             <mat-error>Le status est requis.</mat-error>
-            }
-        </mat-form-field>
-        <mat-form-field appearance="fill">
-            <mat-label>Type</mat-label>
-            <mat-select formControlName="type" required>
-                @for(type of stepTypes; track type){
-                <mat-option [value]="type">{{ type }}</mat-option>
-                }
-            </mat-select>
-            @if(stepForm.get('type')?.errors && stepForm.get('type')?.touched)
-            {
-            <mat-error>Le type est requis.</mat-error>
             }
         </mat-form-field>
         <mat-form-field appearance="fill">
@@ -37,6 +36,17 @@
             <mat-datepicker #departurePicker></mat-datepicker>
         </mat-form-field>
         <mat-form-field>
+            <mat-label>Adresse</mat-label>
+            <mat-select formControlName="address" required>
+                @for(address of addresses; track address) {
+                <mat-option [value]="address['@id']">{{ address.street }}</mat-option>
+                }
+            </mat-select>
+            @if (stepForm.get('address')?.errors && stepForm.get('address')?.touched) {
+            <mat-error>L'adresse est requise.</mat-error>
+            }
+        </mat-form-field>
+        <mat-form-field>
             <mat-label>Produit</mat-label>
             <mat-select formControlName="product" required>
                 @for(product of products; track product){
@@ -44,31 +54,20 @@
                 }
             </mat-select>
             @if (stepForm.get('product')?.errors && stepForm.get('product')?.touched) {
-            <mat-error>Le client est requis.</mat-error>
+            <mat-error>Le produit est requis.</mat-error>
             }
         </mat-form-field>
-        <mat-form-field>
-            <mat-label>Adresse</mat-label>
-            <mat-select formControlName="address" required>
-                @for(address of addresses; track address){
-                <mat-option [value]="address['@id']">{{ address.street }}</mat-option>
-                }
-            </mat-select>
-            @if (stepForm.get('address')?.errors && stepForm.get('address')?.touched) {
-            <mat-error>Le client est requis.</mat-error>
-            }
-        </mat-form-field>
-        <mat-form-field>
+        <!-- <mat-form-field>
             <mat-label>Fuel Type</mat-label>
             <mat-select formControlName="fuelType" required>
-                @for(fuel of fuelTypes; track fuel){
-                <mat-option [value]="fuel.id">{{ fuel.name }}</mat-option>
+                @for(fuel of fuelTypes; track fuel) {
+                <mat-option [value]="fuel['@id']">{{ fuel.name }}</mat-option>
                 }
             </mat-select>
             @if (stepForm.get('fuelType')?.errors && stepForm.get('fuelType')?.touched) {
-            <mat-error>Le Fuel Type est requis.</mat-error>
+            <mat-error>Le type de carburant est requis.</mat-error>
             }
-        </mat-form-field>
+        </mat-form-field> -->
         <mat-form-field>
             <mat-label>Unité</mat-label>
             <mat-select formControlName="unit" required>
@@ -76,8 +75,8 @@
                 <mat-option [value]="unit['@id']">{{ unit.name }}</mat-option>
                 }
             </mat-select>
-            @if (stepForm.get('status')?.errors && stepForm.get('status')?.touched) {
-            <mat-error>Le status est requis.</mat-error>
+            @if (stepForm.get('unit')?.errors && stepForm.get('unit')?.touched) {
+            <mat-error>L'unité de mesure est requise.</mat-error>
             }
         </mat-form-field>
         <mat-form-field appearance="fill">
@@ -88,7 +87,6 @@
             <mat-label>Description</mat-label>
             <input matInput formControlName="description" required>
         </mat-form-field>
-
     </form>
 </mat-dialog-content>
 <mat-dialog-actions>

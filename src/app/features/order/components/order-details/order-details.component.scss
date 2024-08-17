@@ -1,0 +1,134 @@
+.steps-container {
+    display: flex;
+    gap: 24px;
+    height: calc(100vh - 200px); /* Ajuster la hauteur en fonction du header et autres éléments */
+}
+
+.steps-list {
+    flex: 1;
+    max-width: 250px;
+    overflow-y: auto;
+    border-right: 1px solid #e0e0e0;
+    padding-right: 16px;
+}
+
+.step-card {
+    cursor: pointer;
+    margin-left: 2px;
+    transition: background-color 0.3s ease;
+    margin: 2px;
+}
+
+.address {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 200px; // Ajustez la largeur maximale en fonction de votre mise en page
+    display: inline-block;
+}
+
+.step-card.selected {
+    background-color: #e8edf9;
+}
+
+.step-item {
+    cursor: pointer;
+    padding: 8px;
+    border-radius: 12px;
+    // border-bottom: 1px solid #ddd;
+    transition: background-color 0.3s ease;
+}
+
+.step-item:hover {
+    background-color: #f5f5f5;
+}
+
+.step-info {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    // align-items: center;
+}
+
+.step-details {
+    flex: 2;
+    padding-left: 16px;
+    overflow-y: auto;
+}
+
+.detail-card {
+    padding: 16px;
+    max-height: 100%;
+}
+
+.step-details-content div {
+    margin-bottom: 12px;
+}
+
+.mdc-list-item.mdc-list-item--with-one-line {
+    height: auto !important;
+}
+
+// Partie Drag and Drop
+.cdk-drag-preview {
+    border: none;
+    box-sizing: border-box;
+    border-radius: 4px;
+    box-shadow:
+        0 5px 5px -3px rgba(0, 0, 0, 0.2),
+        0 8px 10px 1px rgba(0, 0, 0, 0.14),
+        0 3px 14px 2px rgba(0, 0, 0, 0.12);
+}
+
+.cdk-drag-placeholder {
+    opacity: 0;
+}
+
+.edit-mode {
+    background-color: #4caf50 !important; /* Vert pour indiquer que l'utilisateur est en mode édition */
+    color: #fff;
+}
+
+.steps-list.edit-mode {
+    border: 1px solid #4caf50 !important; /* Ajouter une bordure verte pour indiquer que l'utilisateur est en mode édition */
+    padding: 16px;
+}
+
+.steps-list.view-mode {
+    border: none !important; /* Retirer la bordure pour indiquer que l'utilisateur est en mode lecture */
+}
+
+.status-planifie {
+    background-color: #1976d2 !important; // Couleur pour "Planifié"
+    .mdc-evolution-chip__text-label {
+        color: white !important;
+    }
+}
+
+.status-en-cours {
+    background-color: #46c5b4 !important; // Couleur pour "En cours de livraison"
+    .mdc-evolution-chip__text-label {
+        color: white !important;
+    }
+}
+
+.status-livre {
+    background-color: #4caf50 !important; // Couleur pour "Livré"
+    .mdc-evolution-chip__text-label {
+        color: white !important;
+    }
+}
+
+.status-annule {
+    background-color: #f44336 !important; // Couleur pour "Annulé"
+    .mdc-evolution-chip__text-label {
+        color: white !important;
+    }
+}
+
+.status-echoue {
+    background-color: #ee3a3a !important; // Couleur pour "Échoué"
+    .mdc-evolution-chip__text-label {
+        color: white !important;
+    }
+}

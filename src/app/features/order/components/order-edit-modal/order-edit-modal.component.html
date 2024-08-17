@@ -1,0 +1,20 @@
+<h2 mat-dialog-title>Édition du client de la commande</h2>
+<mat-dialog-content>
+    <form [formGroup]="orderForm">
+        <mat-form-field appearance="fill">
+            <mat-label>Client</mat-label>
+            <mat-select formControlName="client" required>
+                @for(client of clients; track client) {
+                <mat-option [value]="client['@id']">{{ client.name }}</mat-option>
+                }
+            </mat-select>
+            @if (orderForm.get('client')?.errors && orderForm.get('client')?.touched) {
+            <mat-error>Le client est requis.</mat-error>
+            }
+        </mat-form-field>
+    </form>
+</mat-dialog-content>
+<mat-dialog-actions>
+    <button mat-button (click)="onClose()">Annuler</button>
+    <button mat-button (click)="onSave()" color="primary">Sauvegarder</button>
+</mat-dialog-actions>

@@ -47,6 +47,17 @@ export class OrderService {
     return this.http.put<Order>(`${this.apiUrl}/${order.id}`, order);
   }
 
+  patchOrder(orderId: string, clientIRI: string): Observable<Order> {
+    const headers = {
+      'Content-Type': 'application/merge-patch+json',
+      'accept': 'application/ld+json'
+    };
+    const body = {
+      client: clientIRI
+    };
+    return this.http.patch<Order>(`${this.apiUrl}/${orderId}`, body, { headers });
+  }
+
   deleteOrder(id: string): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}/${id}`);
   }
