@@ -1,0 +1,14 @@
+@if(item){
+<div>
+    <h2>Détails</h2>
+    @for(field of fields; track field) {
+    <div>
+        <strong>{{ field.title }}:</strong> {{ getField(item, field.field) }}
+    </div>
+    }
+</div>
+}@else{
+<div>
+    <p>Chargement des détails...</p>
+</div>
+}

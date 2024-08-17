@@ -1,0 +1,24 @@
+<table>
+    <thead>
+        <tr>
+            @for (field of displayFields; track displayFields) {
+            <th>{{ field.title }}</th>
+            }
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @for (item of items; track item) {
+        <tr>
+            @for (field of displayFields; track field) {
+            <td>{{ getField(item, field.field) }}</td>
+            }
+            <td>
+                <button (click)="onView(item)">View</button>
+                <button (click)="onEdit(item)">Edit</button>
+                <button (click)="onDelete(item)">Delete</button>
+            </td>
+        </tr>
+        }
+    </tbody>
+</table>

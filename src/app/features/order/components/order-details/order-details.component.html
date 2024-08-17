@@ -1,0 +1,160 @@
+@if (order) {
+
+<mat-card class="order-card">
+    <mat-card-header>
+        <mat-card-title>
+            Commande #{{ order.serialNumber }}
+        </mat-card-title>
+        <mat-card-subtitle>
+            Créée le: {{ order.createdAt | date: 'dd/MM/yyyy' }} | Dernière mise à jour: {{ order.updatedAt | date:
+            'dd/MM/yyyy' }}
+        </mat-card-subtitle>
+        <mat-card-actions>
+            <button mat-icon-button color="warn" (click)="onDeleteOrder(order)">
+                <mat-icon>delete</mat-icon>
+            </button>
+        </mat-card-actions>
+    </mat-card-header>
+    <mat-card-content>
+        <mat-tab-group>
+            <!-- Informations de la Commande -->
+            <mat-tab label="Informations de la Commande">
+                <div class="order-info">
+                    <mat-card class="info-card">
+                        <mat-card-content>
+                            <h3>Détails de la Commande</h3>
+                            <div><strong>Numéro de série:</strong> {{ order.serialNumber }}</div>
+                            <div><strong>Entreprise:</strong> {{ order.company?.name }}</div>
+                        </mat-card-content>
+                    </mat-card>
+                    <mat-card class="info-card">
+                        <mat-card-content>
+                            <mat-card-actions>
+                                <button mat-icon-button color="primary" (click)="onEditOrder(order)">
+                                    <mat-icon>edit</mat-icon>
+                                </button>
+                            </mat-card-actions>
+                            <h3>Client</h3>
+                            <div><strong>Nom:</strong> {{ order.client?.name }}</div>
+                            <div><strong>Email:</strong> {{ order.client?.email }}</div>
+                            <div><strong>Téléphone:</strong> {{ order.client?.phone }}</div>
+                            <div><strong>Adresse:</strong>
+                                {{ order.client?.address?.street }},
+                                {{ order.client?.address?.city }},
+                                {{ order.client?.address?.zipCode }},
+                                {{ order.client?.address?.stateProvince }},
+                                {{ order.client?.address?.country }}
+                            </div>
+                        </mat-card-content>
+                    </mat-card>
+                </div>
+            </mat-tab>
+
+            <!-- Étapes de la Commande -->
+            <mat-tab label="Étapes de la Commande">
+                @if(isEditMode){
+                <button mat-raised-button color="accent" (click)="toggleEditPosition()">
+                    Enregistrer l'ordre
+                </button>
+                <button mat-raised-button color="warn" (click)="cancelEditPosition()">
+                    Annuler
+                </button>
+                }@else{
+                <button mat-raised-button (click)="toggleEditPosition()">
+                    Éditer l'ordre
+                </button>
+                }
+                <div class="steps-container">
+                    <div class="steps-list">
+                        @if(isEditMode){
+                        <mat-list cdkDropList (cdkDropListDropped)="drop($event)">
+                            @for (step of orderSteps; track step) {
+                            <mat-card class="step-card" (click)="selectStep(step)"
+                                [class.selected]="selectedStep === step" cdkDrag>
+                                <mat-list-item class="step-item">
+                                    <div class="step-info">
+                                        <strong>#{{ step.position }}</strong>
+                                        <mat-chip [appStatusColor]="step.status?.name">
+                                            {{ step.status?.name }}
+                                        </mat-chip>
+
+                                        <span class="address">{{ step.address?.street }}, {{ step.address?.city
+                                            }}</span>
+                                    </div>
+                                </mat-list-item>
+                            </mat-card>
+                            }
+                        </mat-list>
+                        }@else{
+                        <mat-list>
+                            @for (step of orderSteps; track step) {
+                            <mat-card class="step-card" (click)="selectStep(step)"
+                                [class.selected]="selectedStep === step">
+                                <mat-list-item class="step-item">
+                                    <div class="step-info">
+                                        <strong>#{{ step.position }}</strong>
+                                        <mat-chip [appStatusColor]="step.status?.name">
+                                            {{ step.status?.name }}
+                                        </mat-chip>
+                                        <span class="address">{{ step.address?.street }}, {{ step.address?.city
+                                            }}</span>
+                                    </div>
+                                </mat-list-item>
+                            </mat-card>
+                            }
+                        </mat-list>
+                        }
+
+                    </div>
+                    @if(selectedStep){
+                    <div class="step-details">
+                        <mat-card class="detail-card">
+                            <mat-card-header>
+                                <mat-card-title>
+                                    Étape {{ selectedStep.position }} - {{ selectedStep.type }}
+                                </mat-card-title>
+                                <mat-card-subtitle>
+                                    Status: <mat-chip color="primary">{{ selectedStep.status?.name }}</mat-chip>
+                                </mat-card-subtitle>
+                                <mat-card-actions>
+                                    <button mat-icon-button color="primary" (click)="onEditStep(selectedStep)">
+                                        <mat-icon>edit</mat-icon>
+                                    </button>
+                                    <button mat-icon-button color="warn" (click)="onDeleteStep(selectedStep)">
+                                        <mat-icon>delete</mat-icon>
+                                    </button>
+                                </mat-card-actions>
+                            </mat-card-header>
+                            <mat-card-content>
+                                <div class="step-details-content">
+                                    <div><strong>Quantité:</strong> {{ selectedStep.quantity }}</div>
+                                    <div><strong>Produit:</strong> {{ selectedStep.product?.name }}</div>
+                                    <div><strong>Unité de mesure:</strong> {{ selectedStep.unit?.name }}</div>
+                                    <div><strong>Description:</strong> {{ selectedStep.description }}</div>
+                                    <div><strong>Adresse:</strong>
+                                        {{ selectedStep.address?.street }},
+                                        {{ selectedStep.address?.city }},
+                                        {{ selectedStep.address?.zipCode }},
+                                        {{ selectedStep.address?.stateProvince }},
+                                        {{ selectedStep.address?.country }}
+                                    </div>
+                                    <div><strong>Arrivée prévue:</strong> {{ selectedStep.scheduledArrival | date:
+                                        'dd/MM/yyyy HH:mm' }}</div>
+                                    <div><strong>Départ prévu:</strong> {{ selectedStep.scheduledDeparture | date:
+                                        'dd/MM/yyyy HH:mm' }}</div>
+                                </div>
+                            </mat-card-content>
+                        </mat-card>
+                    </div>
+                    }
+                </div>
+            </mat-tab>
+        </mat-tab-group>
+    </mat-card-content>
+</mat-card>
+
+} @else {
+<div>
+    <h1>Commande introuvable</h1>
+</div>
+}

@@ -1,0 +1,42 @@
+<div class="order-form">
+    <h1>Créer une nouvelle commande</h1>
+    <form [formGroup]="orderForm" (ngSubmit)="createOrder()">
+        <div class="form-section">
+            <h2>Informations de Base</h2>
+            <mat-form-field appearance="fill">
+                <mat-label>Client</mat-label>
+                <mat-select formControlName="client" required>
+                    @for (client of clients; track client) {
+                    <mat-option [value]="client['@id']">{{ client.name }}</mat-option>
+                    }
+                </mat-select>
+                @if (orderForm.get('client')?.errors && orderForm.get('client')?.touched){
+                <mat-error>Le client est requis.</mat-error>
+                }
+            </mat-form-field>
+        </div>
+    </form>
+    <h2>Étapes de la Commande</h2>
+    <div class="steps-grid">
+        @for(step of orderSteps.controls; track step){
+        <mat-card class="step-card" appearance="outlined">
+            <mat-card-header>
+                <mat-card-title>Étape {{ step.get('position')?.value }}</mat-card-title>
+                <button mat-icon-button color="primary" (click)="openStepModal(step)">
+                    <mat-icon>edit</mat-icon>
+                </button>
+                <button mat-icon-button color="warn" (click)="removeStep(step)">
+                    <mat-icon>delete</mat-icon>
+                </button>
+            </mat-card-header>
+            <mat-card-content>
+                <p>{{ step.get('description')?.value }}</p>
+            </mat-card-content>
+        </mat-card>
+        }
+        <button mat-raised-button color="primary" type="button" (click)="addStep()">Ajouter une Étape</button>
+    </div>
+    <!-- Bouton de Soumission -->
+    <button mat-raised-button color="primary" type="submit" [disabled]="orderForm.invalid" (click)="createOrder()"
+        style="margin-top: 10px;">Créer</button>
+</div>
