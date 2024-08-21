@@ -44,12 +44,14 @@ export class OrderStepService {
     return this.http.get<OrderStep>(`${this.apiUrl}/${id}`);
   }
 
-  createOrderStep(orderStep: OrderStep): Observable<OrderStep> {
+  createOrderStep(orderId: number, orderStep: OrderStep): Observable<OrderStep> {
     const headers = {
       'Content-Type': 'application/ld+json',
       'accept': 'application/ld+json'
     };
-    return this.http.post<OrderStep>(this.apiUrl, orderStep, { headers });
+
+    let uri = `${environment.apiUrl}/orders/${orderId}/order_steps`;
+    return this.http.post<OrderStep>(uri, orderStep, { headers });
   }
 
   updateOrderStep(orderStep: OrderStep): Observable<OrderStep> {

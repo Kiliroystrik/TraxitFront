@@ -6,7 +6,7 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { DatePipe } from '@angular/common';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
-import { Subject } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
 import { OrderService } from '../../services/order.service';
@@ -55,7 +55,7 @@ export class OrderDetailsComponent implements OnInit, OnDestroy {
   id: string | null = null;
   order!: Order;
   selectedStep: OrderStep | null = null;
-  orderSteps: OrderStep[];
+  orderSteps: OrderStep[] = [];
   isEditMode = false;
   addresses: Address[] = [];
   fuelTypes: FuelType[] = [];
@@ -188,21 +188,40 @@ export class OrderDetailsComponent implements OnInit, OnDestroy {
     });
   }
 
-  private openStepModal(step: OrderStep): void {
-    this.openDialog(StepModalComponent, {
-      step: step,
-      addresses: this.addresses,
-      fuelTypes: this.fuelTypes,
-      statuses: this.statuses,
-      products: this.products,
-      units: this.units
-    }).subscribe(result => {
+  private openStepModal(step: OrderStep): Observable<OrderStep | null> {
+    return this.dialog.open(StepModalComponent, {
+      width: '400px',
+      data: {
+        step: step,
+        addresses: this.addresses,
+        fuelTypes: this.fuelTypes,
+        statuses: this.statuses,
+        products: this.products,
+        units: this.units,
+        order: this.order
+      }
+    }).afterClosed();
+  }
+
+
+  public onAddStep(): void {
+    this.openStepModal({} as OrderStep).subscribe(result => {
       if (result) {
-        Object.assign(step, result);
-        this.updateOrderStep(step);
+        // On ajoute la propriété 'position' à l'objet OrderStep ainsi que son order id
+        result.position = this.orderSteps.length;
+        console.table(result);
+        // Si le modal a renvoyé des données, créez le nouvel OrderStep
+        this.orderStepService.createOrderStep(this.order.id, result).subscribe({
+          next: orderStep => {
+            this.orderSteps.push(orderStep);
+            this.selectStep(orderStep);
+          },
+          error: err => console.error('Error creating order step:', err)
+        });
       }
     });
   }
+
 
   private updateOrderStep(orderStep: OrderStep): void {
     this.orderStepService.updateOrderStep(orderStep)

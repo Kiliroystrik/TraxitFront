@@ -52,6 +52,7 @@
 
             <!-- Étapes de la Commande -->
             <mat-tab label="Étapes de la Commande">
+                @if (orderSteps.length > 0) {
                 @if(isEditMode){
                 <button mat-raised-button color="accent" (click)="toggleEditPosition()">
                     Enregistrer l'ordre
@@ -63,6 +64,7 @@
                 <button mat-raised-button (click)="toggleEditPosition()">
                     Éditer l'ordre
                 </button>
+                }
                 }
                 <div class="steps-container">
                     <div class="steps-list">
@@ -102,6 +104,7 @@
                                 </mat-list-item>
                             </mat-card>
                             }
+                            <button mat-raised-button color="primary" (click)="onAddStep()">Ajouter une étape</button>
                         </mat-list>
                         }
 

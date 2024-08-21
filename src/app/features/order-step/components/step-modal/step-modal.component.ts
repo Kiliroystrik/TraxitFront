@@ -81,6 +81,7 @@ export class StepModalComponent implements OnInit {
         status: this.statuses.find(stat => stat['@id'] === this.stepForm.value.status),
         product: this.products.find(prod => prod['@id'] === this.stepForm.value.product),
         unit: this.units.find(unit => unit['@id'] === this.stepForm.value.unit),
+        order: this.data.order['@id']
       };
 
       this.dialogRef.close(updatedStep);
