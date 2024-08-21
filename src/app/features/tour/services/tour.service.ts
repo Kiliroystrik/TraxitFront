@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { environment } from '../../../../environment/environment';
@@ -14,9 +14,22 @@ export class TourService {
 
   constructor(private http: HttpClient) { }
 
-  getTours(): Observable<Tour[]> {
-    return this.http.get<any>(this.apiUrl).pipe(
-      map(response => response['hydra:member'])
+  getTours(
+    sort: string = 'id',
+    order: string = 'asc',
+    page: number = 1,
+    itemsPerPage: number = 10
+  ): Observable<{ items: Tour[], totalItems: number }> {
+    let params = new HttpParams()
+      .set('order[' + sort + ']', order)
+      .set('page', page.toString())
+      .set('itemsPerPage', itemsPerPage.toString());
+
+    return this.http.get<any>(this.apiUrl, { params }).pipe(
+      map(response => ({
+        items: response['hydra:member'],
+        totalItems: response['hydra:totalItems']
+      }))
     );
   }
 

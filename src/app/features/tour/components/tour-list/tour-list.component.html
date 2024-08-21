@@ -1,28 +1,54 @@
-<!-- <div>
-    <h1>List of Tours</h1>
-    <button (click)="addTour()">Add Tour</button>
-    <table>
-        <thead>
-            <tr>
-                <th>Start Date</th>
-                <th>End Date</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-            @for (tour of tours; track $index) {
-            <tr>
-                <td>{{ tour.startDate | date }}</td>
-                <td>{{ tour.endDate | date }}</td>
-                <td>
-                    <a [routerLink]="['/tournees', tour.id]">Voir détails</a>
+<div class="content-container">
+    <button mat-raised-button color="primary" (click)="addTour()">Nouvelle commande</button>
+    <div class="mat-elevation-z8">
+        @if (isLoadingResults) {
+        <div class="loading-shade">
+            <mat-spinner></mat-spinner>
+        </div>
+        }
+        @if (isRateLimitReached) {
+        <div class="rate-limit-reached">
+            API rate limit has been reached. Please try again later.
+        </div>
+        }
+        <table mat-table [dataSource]="data" matSort matSortActive="id" matSortDisableClear matSortDirection="desc">
+            <!-- ID Column -->
+            <ng-container matColumnDef="id">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>N° de Tournée</th>
+                <td mat-cell *matCellDef="let row">
+                    <a mat-button routerLink="/gestion-des-tournees/{{row.id}}">{{row.id}}</a>
                 </td>
-            </tr>
-            }
-        </tbody>
-    </table>
-</div> -->
+            </ng-container>
 
-<app-crud-list [items]="tours" [displayFields]="displayFields" (view)="onView($event)" (edit)="onEdit($event)"
-    (delete)="onDelete($event)">
-</app-crud-list>
+            <!-- Created At Column -->
+            <ng-container matColumnDef="createdAt">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>Date de Création</th>
+                <td mat-cell *matCellDef="let row">{{row.createdAt | date:'dd/MM/yyyy'}}</td>
+            </ng-container>
+
+            <!-- Updated At Column -->
+            <ng-container matColumnDef="updatedAt">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>Date de Mise à Jour</th>
+                <td mat-cell *matCellDef="let row">{{row.updatedAt | date:'dd/MM/yyyy'}}</td>
+            </ng-container>
+
+            <!-- Company Name Column -->
+            <ng-container matColumnDef="company.name">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>Nom de l'Entreprise</th>
+                <td mat-cell *matCellDef="let row">{{row.company.name}}</td>
+            </ng-container>
+
+            <!-- Client Name Column -->
+            <ng-container matColumnDef="client.name">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>Nom du Client</th>
+                <td mat-cell *matCellDef="let row">{{row.client.name}}</td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+        </table>
+
+        <mat-paginator [length]="resultsLength" [pageSize]="10" [pageSizeOptions]="[10, 25, 50]"
+            showFirstLastButtons></mat-paginator>
+    </div>
+</div>

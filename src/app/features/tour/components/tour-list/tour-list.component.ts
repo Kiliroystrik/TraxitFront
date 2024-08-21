@@ -1,58 +1,96 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild, AfterViewInit, OnDestroy } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
 import { TourService } from '../../services/tour.service';
 import { Tour } from '../../interfaces/tour';
 import { TourStep } from '../../../tour-step/interfaces/tourstep';
 import { CrudListComponent } from '../../../../shared/components/crud/crud-list/crud-list.component';
-import { map } from 'rxjs';
+import { catchError, map, startWith, switchMap, takeUntil } from 'rxjs/operators';
+import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
+import { MatSort, MatSortModule, SortDirection } from '@angular/material/sort';
+import { merge, Observable, of as observableOf, Subject } from 'rxjs';
+import { MatTableModule } from '@angular/material/table';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatButtonModule } from '@angular/material/button';
 
 @Component({
   selector: 'app-tour-list',
   standalone: true,
-  imports: [DatePipe, RouterModule, CrudListComponent],
+  imports: [
+    DatePipe,
+    CrudListComponent,
+    MatProgressSpinnerModule,
+    MatTableModule,
+    MatSortModule,
+    MatPaginatorModule,
+    MatButtonModule,
+    RouterModule,
+  ],
   templateUrl: './tour-list.component.html',
   styleUrls: ['./tour-list.component.scss'],
   providers: [DatePipe],
 })
-export class TourListComponent implements OnInit {
-  tours: any[] = []; // Note: We'll be using a transformed version of Tour for the display
-  displayFields = [
-    { title: 'startDate', field: 'startDate' },
-    { title: 'endDate', field: 'endDate' },
-    { title: 'company', field: 'company' },
+export class TourListComponent implements AfterViewInit, OnDestroy {
+  data: Tour[] = [];
+  displayedColumns: string[] = ['id', 'createdAt', 'updatedAt'];
+  resultsLength = 0;
+  isLoadingResults = true;
+  isRateLimitReached = false;
 
-  ];
+  @ViewChild(MatPaginator) paginator!: MatPaginator;
+  @ViewChild(MatSort) sort!: MatSort;
+
+  private destroy$ = new Subject<void>();
 
   constructor(private tourService: TourService, private datePipe: DatePipe, private router: Router) { }
 
-  ngOnInit(): void {
-    this.getTours();
+  ngAfterViewInit() {
+    // If the user changes the sort order, reset back to the first page.
+    this.sort.sortChange.pipe(takeUntil(this.destroy$)).subscribe(() => this.paginator.pageIndex = 0);
+
+    merge(this.sort.sortChange, this.paginator.page)
+      .pipe(
+        takeUntil(this.destroy$),
+        startWith({}),
+        switchMap(() => {
+          this.isLoadingResults = true;
+          return this.tourService.getTours(
+            this.sort.active,
+            this.sort.direction,
+            this.paginator.pageIndex + 1,
+            this.paginator.pageSize
+          ).pipe(catchError(() => observableOf(null)));
+        }),
+        map(data => {
+          this.isLoadingResults = false;
+          this.isRateLimitReached = data === null;
+
+          if (data === null) {
+            return [];
+          }
+
+          this.resultsLength = data.totalItems;
+          return data.items;
+        })
+      )
+      .subscribe(data => this.data = data);
   }
 
-  getTours(): void {
-    this.tourService.getTours().pipe(
-      map(tours => tours.map(tour => ({
-        ...tour,
-        startDate: tour.startDate ? this.datePipe.transform(tour.startDate, 'dd/MM/yyyy') : null,
-        endDate: tour.endDate ? this.datePipe.transform(tour.endDate, 'dd/MM/yyyy') : null,
-        createdAt: tour.createdAt ? this.datePipe.transform(tour.createdAt, 'dd/MM/yyyy') : null,
-        updatedAt: tour.updatedAt ? this.datePipe.transform(tour.updatedAt, 'dd/MM/yyyy') : null,
-      })))
-    ).subscribe(transformedTours => {
-      this.tours = transformedTours;
-    });
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
+
+
   addTour(): void {
     const newTour: Tour = {
       createdAt: new Date(),
       updatedAt: new Date(),
       startDate: new Date(),
       endDate: new Date(),
-      company: '/api/companies/1', // replace with actual company API resource identifier
     };
     this.tourService.createTour(newTour).subscribe((tour) => {
-      this.tours.push(tour);
+      this.data.push(tour);
     });
   }
 
