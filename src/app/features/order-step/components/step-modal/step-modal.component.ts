@@ -12,6 +12,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatOptionModule } from '@angular/material/core';
 import { MatSelectModule } from '@angular/material/select';
+import { AddressAutocompleteComponent } from "../../../../shared/components/address-autocomplete/address-autocomplete.component";
 
 @Component({
   selector: 'app-step-modal',
@@ -26,7 +27,8 @@ import { MatSelectModule } from '@angular/material/select';
     MatButtonModule,
     MatDatepickerModule,
     MatOptionModule,
-    MatSelectModule
+    MatSelectModule,
+    AddressAutocompleteComponent
   ],
 })
 export class StepModalComponent implements OnInit {
@@ -64,6 +66,11 @@ export class StepModalComponent implements OnInit {
     this.products = this.data.products;
     this.units = this.data.units;
   }
+  onAddressSelected(address: any) {
+    console.log('Adresse sélectionnée :', address);
+    // Logique pour gérer l'adresse sélectionnée
+  }
+
 
   onSave(): void {
     if (this.stepForm.valid) {

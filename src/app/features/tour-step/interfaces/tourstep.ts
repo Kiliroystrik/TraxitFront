@@ -1,3 +1,5 @@
+import { OrderStep } from "../../order-step/interfaces/orderstep";
+
 export interface TourStep {
   "@id"?: string;
   id?: number;
@@ -7,6 +9,6 @@ export interface TourStep {
   actualArrival?: Date;
   actualDeparture?: Date;
   stepNumber?: number;
-  orderStep?: string;
+  orderStep?: OrderStep;
   tour?: string;
 }

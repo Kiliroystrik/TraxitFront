@@ -35,7 +35,7 @@
             <mat-datepicker-toggle matIconSuffix [for]="departurePicker"></mat-datepicker-toggle>
             <mat-datepicker #departurePicker></mat-datepicker>
         </mat-form-field>
-        <mat-form-field>
+        <!-- <mat-form-field>
             <mat-label>Adresse</mat-label>
             <mat-select formControlName="address" required>
                 @for(address of addresses; track address) {
@@ -45,7 +45,8 @@
             @if (stepForm.get('address')?.errors && stepForm.get('address')?.touched) {
             <mat-error>L'adresse est requise.</mat-error>
             }
-        </mat-form-field>
+        </mat-form-field> -->
+        <app-address-autocomplete (addressSelected)="onAddressSelected($event)"></app-address-autocomplete>
         <mat-form-field>
             <mat-label>Produit</mat-label>
             <mat-select formControlName="product" required>

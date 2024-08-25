@@ -1,58 +1,158 @@
 @if (tour) {
-<div>
+<mat-card class="tour-details-container mat-elevation-z2">
     <h2>Détails de la tournée</h2>
 
-    <div class="tour-info">
-        <p><strong>ID:</strong> {{ tour.id }}</p>
-        <p><strong>Date de création:</strong> {{ tour.createdAt }}</p>
-        <p><strong>Dernière mise à jour:</strong> {{ tour.updatedAt }}</p>
-        <p><strong>Date de début:</strong> {{ tour.startDate }}</p>
-        <p><strong>Date de fin:</strong> {{ tour.endDate }}</p>
-        <p><strong>Entreprise:</strong> {{ tour.company }}</p>
-    </div>
-
-    @if(tour.tourSteps && tour.tourSteps.length > 0){
-    <div class="tour-steps">
-        <h3>Étapes de la tournée</h3>
-        <ul>
-            @for (stepId of tour.tourSteps; track $index) {
-            <li>
-                {{ stepId }}
-                <!-- Vous pouvez ajouter plus de détails sur chaque étape si vous les récupérez -->
-            </li>
+    <mat-tab-group (selectedTabChange)="onTabChange($event)">
+        <mat-tab label="Tournée">
+            <div class="tour-info">
+                <mat-card class="info-card">
+                    <mat-card-content>
+                        <h3>Détails de la Tournée</h3>
+                        <p><strong>ID:</strong> {{ tour.id }}</p>
+                        <p><strong>Date de création:</strong> {{ tour.createdAt }}</p>
+                        <p><strong>Dernière mise à jour:</strong> {{ tour.updatedAt }}</p>
+                        <p><strong>Date de début:</strong> {{ tour.startDate }}</p>
+                        <p><strong>Date de fin:</strong> {{ tour.endDate }}</p>
+                    </mat-card-content>
+                </mat-card>
+            </div>
+        </mat-tab>
+        <mat-tab label="Étapes de la tournée">
+            @if (tour.tourSteps && tour.tourSteps.length > 0) {
+            @if(isEditMode){
+            <button mat-raised-button color="accent" (click)="toggleEditPosition()">
+                Enregistrer l'ordre
+            </button>
+            <button mat-raised-button color="warn" (click)="cancelEditPosition()">
+                Annuler
+            </button>
+            }@else{
+            <button mat-raised-button (click)="toggleEditPosition()">
+                Éditer l'ordre
+            </button>
             }
-        </ul>
+            }
+            <div class="steps-container">
+                <div class="steps-list">
+                    @if(isEditMode){
+                    <mat-list cdkDropList (cdkDropListDropped)="drop($event)">
+                        @for (tourStep of tourSteps; track tourStep) {
+                        <mat-card class="step-card" (click)="onSelectTourStep(tourStep)"
+                            [class.selected]="selectedStep === tourStep" cdkDrag>
+                            <mat-list-item class="step-item">
+                                <div class="step-info">
+                                    <p><strong>ID:</strong> {{ tourStep.id }}</p>
+                                    <p><strong>Date de passage:</strong> {{ tourStep.actualArrival }}</p>
+                                    <p><strong>Date de fin:</strong> {{ tourStep.actualDeparture }}</p>
+                                    @if (tourStep.orderStep) {
+                                    <p><strong>Ordre:</strong> {{ tourStep.orderStep }}</p>
+                                    }
+                                    <p><strong>Dernière mise à jour:</strong> {{ tourStep.updatedAt }}</p>
+                                </div>
+                            </mat-list-item>
+                        </mat-card>
+                        }
+                    </mat-list>
+                    }@else{
+                    <mat-list>
+                        @for (step of tourSteps; track step) {
+                        <mat-card class="step-card" (click)="onSelectTourStep(step)"
+                            [class.selected]="selectedStep === step">
+                            <mat-list-item class="step-item">
+                                <div class="step-info">
+                                    <strong>#{{ step.stepNumber }}</strong>
+                                    <p><strong>Ordre:</strong> {{ step.orderStep.address.street }}</p>
+                                    <!-- <mat-chip [appStatusColor]="step.status?.name">
+                                        {{ step.status?.name }}
+                                    </mat-chip>
+                                    <span class="address">{{ step.address?.street }}, {{ step.address?.city}}</span> -->
+                                </div>
+                            </mat-list-item>
+                        </mat-card>
+                        }
+                        <button mat-raised-button color="primary">Ajouter une étape</button>
+                    </mat-list>
+                    }
+
+                </div>
+                <!-- @if(selectedStep){ -->
+                <!--  J'affiche ma carte  -->
+                <div class="tour-map">
+                    <div class="tour-map">
+                        <div style="height: 100%;" leaflet [leafletOptions]="options" [leafletLayers]="markers"
+                            (leafletMapReady)="onMapReady($event)">
+                        </div>
+                    </div>
+
+                </div>
+                <!-- } -->
+            </div>
+
+        </mat-tab>
+    </mat-tab-group>
+
+
+    <!-- <div class="tour-layout">
+        <div class="tour-steps-list">
+            @if (tour.tourSteps && tour.tourSteps.length > 0) {
+            <h3>Étapes de la tournée</h3>
+            <mat-nav-list>
+                @for (tourStep of tourSteps; track $index) {
+                <mat-list-item (click)="onSelectTourStep(tourStep)">
+                    <mat-card>
+                        <mat-card-content>
+                            <p><strong>ID:</strong> {{ tourStep.id }}</p>
+                            <p><strong>Date de passage:</strong> {{ tourStep.actualArrival }}</p>
+                            <p><strong>Date de fin:</strong> {{ tourStep.actualDeparture }}</p>
+                            @if (tourStep.orderStep) {
+                            <p><strong>Ordre:</strong> {{ tourStep.orderStep }}</p>
+                            }
+                            <p><strong>Dernière mise à jour:</strong> {{ tourStep.updatedAt }}</p>
+                        </mat-card-content>
+                    </mat-card>
+                </mat-list-item>
+                }
+            </mat-nav-list>
+            }
+        </div>
+
     </div>
-    }
 
     @if (tour.driverAssignments && tour.driverAssignments.length > 0) {
     <div class="driver-assignments">
         <h3>Assignations de conducteurs</h3>
-        <ul>
-            @for (assignmentId of tour.driverAssignments; track $index) {
-            <li>
-                {{ assignmentId }}
-                <!-- Vous pouvez ajouter plus de détails sur chaque assignation si vous les sélectionnez -->
-            </li>
-            }
-        </ul>
+        <mat-card>
+            <mat-card-content>
+                <mat-list>
+                    @for (assignmentId of tour.driverAssignments; track $index) {
+                    <mat-list-item>
+                        {{ assignmentId }}
+                    </mat-list-item>
+                    }
+                </mat-list>
+            </mat-card-content>
+        </mat-card>
     </div>
     }
 
-    @if (tour.vehicleAssignment && tour.vehicleAssignment.length > 0){
+    @if (tour.vehicleAssignment && tour.vehicleAssignment.length > 0) {
     <div class="vehicle-assignments">
         <h3>Assignations de véhicules</h3>
-        <ul>
-            @for (assignmentId of tour.vehicleAssignment; track $index) {
-            <li>
-                {{ assignmentId }}
-                <!-- Vous pouvez ajouter plus de détails sur chaque assignation si vous les récupérez -->
-            </li>
-            }
-        </ul>
+        <mat-card>
+            <mat-card-content>
+                <mat-list>
+                    @for (assignmentId of tour.vehicleAssignment; track $index) {
+                    <mat-list-item>
+                        {{ assignmentId }}
+                    </mat-list-item>
+                    }
+                </mat-list>
+            </mat-card-content>
+        </mat-card>
     </div>
-    }
-</div>
+    } -->
+</mat-card>
+
 }@else {
 <div>
     <p>Chargement des détails de la tournée...</p>

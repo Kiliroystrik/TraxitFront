@@ -1,0 +1,14 @@
+<div class="address-autocomplete">
+    <mat-form-field appearance="fill">
+        <mat-label>Adresse</mat-label>
+        <input type="text" matInput [formControl]="searchControl" [matAutocomplete]="auto"
+            placeholder="Entrez une adresse">
+        <mat-autocomplete #auto="matAutocomplete">
+            @for (suggestion of suggestions; track suggestion){
+            <mat-option [value]="suggestion.display_name" (onSelectionChange)="onSelectSuggestion(suggestion)">
+                {{ suggestion.display_name }}
+            </mat-option>
+            }
+        </mat-autocomplete>
+    </mat-form-field>
+</div>
